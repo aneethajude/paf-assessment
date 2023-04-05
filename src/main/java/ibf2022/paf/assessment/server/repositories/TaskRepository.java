@@ -17,11 +17,17 @@ public class TaskRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    public void upsertTask(List<Task> taskList, String cUserId) {
-        if(taskList != null) {
-            for(Task task : taskList) {
-                jdbcTemplate.update(SQL_INSERT_TASK, cUserId, task.getDescription(), task.getPriority(), task.getDueDate());
+    public String insertTask(List<Task> taskList, String cUserId) {
+        String responseString = null;
+        try {
+            if(taskList != null) {
+                for(Task task : taskList) {
+                    jdbcTemplate.update(SQL_INSERT_TASK, cUserId, task.getDescription(), task.getPriority(), task.getDueDate());
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return responseString;
     }
 }

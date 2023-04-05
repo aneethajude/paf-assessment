@@ -18,25 +18,25 @@ public class UserRepository {
    
     public static final String SQL_FIND_CUSTOMER_BY_NAME ="select * from user where username = ?";
     public static final String SQL_INSERT_CUSTOMER ="insert into user(user_id, username, name) values(?, ?, ?)";
+    
     @Autowired
     JdbcTemplate jdbcTemplate;
     
     public Optional<User> findUserByUsername(String username){
-        SqlRowSet rs = jdbcTemplate.queryForRowSet(SQL_FIND_CUSTOMER_BY_NAME, username);
-        if(!rs.next())
-            return Optional.empty();
-
-        return Optional.of(toUser(rs));
-    }
-
-    private User toUser(SqlRowSet rs) {
         User user = new User();
+        boolean isExist = false;
+        SqlRowSet rs = jdbcTemplate.queryForRowSet(SQL_FIND_CUSTOMER_BY_NAME, username);        
         while (rs.next()) { 
             user.setUserId(rs.getString("user_id"));
             user.setUsername(rs.getString("username"));
             user.setName(rs.getString("name"));
+            isExist = true;
         }
-        return user;
+
+        if(!isExist)
+            return Optional.empty();
+
+        return Optional.of(user);
     }
 
     public String insertUser(User user){

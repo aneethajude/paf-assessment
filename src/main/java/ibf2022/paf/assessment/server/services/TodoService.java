@@ -23,6 +23,7 @@ public class TodoService {
 
     public String upsertTask(List<Task> taskList, String userName) {
         String cUserId = null;
+        String responseString = null;
         User user = new User();        
         Optional<User> userList = userRepository.findUserByUsername(userName);
         if(!userList.isPresent()) {
@@ -35,9 +36,10 @@ public class TodoService {
         }
 
         if(cUserId != null)
-            taskRepository.upsertTask(taskList, cUserId);
+            responseString = taskRepository.insertTask(taskList, cUserId);
+        else 
+            responseString = "error";
 
-        return "";
+        return responseString;
     }
-        
 }
